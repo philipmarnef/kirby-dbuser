@@ -19,11 +19,13 @@ class CustomApp extends App {
 
     public static function db_user_create(array $data) : bool {
         $data['password'] = User::hashPassword($data['password']);
-        return Db::insert('users', $data);
+        Db::insert('users', $data);
+        return false; # Halt default Kirby user creation
     }
 
     public  static function db_user_update(string $id, array $values) : bool
     {
-        return Db::update('users', $values, ['id' => $id]);
+        Db::update('users', $values, ['id' => $id]);
+        return false; # Halt default Kirby user update
     }
 }
