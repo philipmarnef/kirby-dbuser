@@ -2,7 +2,7 @@
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-echo (new Kirby([
+echo (new \Kirby\Cms\App([
 	'roots' => [
 		'index'			=> __DIR__,
 		'base'			=> $base    = dirname(__DIR__),
