@@ -19,7 +19,7 @@ class CustomApp extends App
         $users = [];
         if (
             Str::startsWith($this->path(), 'panel')
-            || Str::startsWith($this->path(), 'api/auth')
+            || Str::startsWith($this->path(), 'api')
         ) {
             $users = Db::table('users')
                 ->fetch('array')->iterator('array')
