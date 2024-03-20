@@ -1,10 +1,12 @@
 <?php
 
+use Kirby\Cms\App;
+
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 ray()->measure();
 
-echo (new CustomApp([
+echo (new App([
 	'roots' => [
 		'index'			=> __DIR__,
 		'base'			=> $base    = dirname(__DIR__),

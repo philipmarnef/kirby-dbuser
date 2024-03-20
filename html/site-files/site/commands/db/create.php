@@ -34,6 +34,15 @@ return [
 			],
 		]);
 
+		$__ = array_fill(0, 2000, 1);
+		$__ = array_map(fn($i) => [
+			'id'        => Str::random(8),
+			'email'     => 'user' . $i . '@example.com',
+			'password'  => User::hashPassword('12345678'),
+			'role'      => 'subscriber',
+			'language'  => 'en',
+		], $__);
+
 		for ($i=0; $i < 2001; $i++) { 
 			Db::insert('users', [
 				'id'        => Str::random(8),
