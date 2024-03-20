@@ -4,6 +4,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
 use Kirby\Database\Db;
+use Kirby\Toolkit\Str;
 
 class CustomApp extends App
 {
@@ -16,17 +17,19 @@ class CustomApp extends App
         }
 
         $users = [];
-        if ($user_id = $this->session()->get('user_logged_in')) {
+        if (
+            Str::startsWith($this->path(), 'panel')
+            || Str::startsWith($this->path(), 'api/auth')
+        ) {
+            ray('loading all users');
+            $users = Db::table('users')
+                ->fetch('array')->iterator('array')
+                ->all();
+        } else if ($user_id = $this->session()->get('user_logged_in')
+        ) {
             $users = Db::table('users')
                 ->where('role', 'is not', 'subscriber')
                 ->orWhere(['id' => $user_id])
-                ->fetch('array')->iterator('array')
-                ->all();
-        } else if (
-            str_starts_with($this->path(), 'panel')
-            || str_starts_with($this->path(), 'api/auth')
-        ) {
-            $users = Db::table('users')
                 ->fetch('array')->iterator('array')
                 ->all();
         } else {
