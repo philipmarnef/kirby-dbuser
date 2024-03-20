@@ -1,7 +1,8 @@
 <?php
 
-use Kirby\Database\Database;
 use Kirby\Cms\User;
+use Kirby\Data\Json;
+use Kirby\Database\Database;
 use Kirby\Toolkit\Str;
 
 return [
@@ -47,7 +48,7 @@ return [
 					'language' =>  [
 							'type' => 'text',
 					],
-					'password' =>  [
+					'secrets' =>  [
 							'type' => 'text',
 					],
 			]);
@@ -58,16 +59,18 @@ return [
 					[ 
 						'id'        => Str::random(8),
 						'email'     => 'philip@example.com',
-						'password'  => User::hashPassword('12345678'),
+						'name'			=> 'Philip',
 						'role'      => 'subscriber',
 						'language'  => 'en',
+						'secrets'  => Json::encode( [ 'password' => User::hashPassword('12345678') ] ),
 					],
 					[ 
 						'id'        => Str::random(8),
 						'email'     => 'adam@example.com',
-						'password'  => User::hashPassword('12345678'),
+						'name'			=> 'Adam',
 						'role'      => 'subscriber',
 						'language'  => 'en',
+						'secrets' 	=> Json::encode( [ 'password' => User::hashPassword('12345678') ] ),
 					]
 			];
 			// loops through users array and insert each data set into users table

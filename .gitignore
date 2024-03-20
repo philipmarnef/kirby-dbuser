@@ -42,3 +42,6 @@ html/**/public/media
 # Third party plugins
 html/**/site/plugins/*
 !html/**/site/plugins/kirby-dbuser
+
+# Sandbox
+test-model.php

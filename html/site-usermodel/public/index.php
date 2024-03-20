@@ -2,7 +2,12 @@
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-echo (new \Kirby\Cms\App([
+load([
+	'SubscriberKirby' => dirname(__DIR__) . '/site/plugins/kirby-dbuser/src/SubscriberKirby.php',
+]);
+
+
+echo (new SubscriberKirby([
 	'roots' => [
 		'index'			=> __DIR__,
 		'base'			=> $base    = dirname(__DIR__),
