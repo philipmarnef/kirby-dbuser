@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\User;
+use Kirby\Toolkit\A;
 use Kirby\Database\Db;
 use Kirby\Toolkit\Str;
 
@@ -34,22 +35,30 @@ return [
 			],
 		]);
 
-		for ($i=0; $i < 2001; $i++) { 
-			Db::insert('users', [
-				'id'        => Str::random(8),
-				'email'     => 'user' . $i . '@example.com',
-				'password'  => User::hashPassword('12345678'),
-				'role'      => 'subscriber',
-				'language'  => 'en',
-			]);
+		ray()->measure();
+
+		$password = User::hashPassword('12345678');
+		$users_flat = [];
+		for ($i=0; $i < 10001; $i++) { 
+			if ($i % 1000 === 0) {
+				ray()->measure();
+			}
+
+			$users_flat[] = Str::random(8);
+			$users_flat[] = 'user' . $i . '@example.com';
+			$users_flat[] = $password;
+			$users_flat[] = 'subscriber';
+			$users_flat[] = 'en';
 		}
-		Db::insert('users', [
-			'id'        => Str::random(8),
-			'email'     => 'iam@adamkiss.com',
-			'password'  => User::hashPassword('asdasdasd'),
-			'role'      => 'admin',
-			'language'  => 'en',
-		]);
+
+		$questions = A::join(array_fill(0, 10001, '(?, ?, ?, ?, ?)'), ', ');
+		$sql = 'INSERT INTO users (id, email, password, role, language) VALUES '.$questions;
+		Db::$connection->execute($sql, $users_flat);
+
+		ray(Db::lastError());
+
+		ray()->measure();
+
 
 		$cli->success('Database setup complete!');
 	}

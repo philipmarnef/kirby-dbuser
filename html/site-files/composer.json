@@ -9,11 +9,6 @@
       "getkirby/composer-installer": true
     }
   },
-  "autoload": {
-    "files": [
-      "site/CustomApp.php"
-    ]
-  },
   "extra": {
     "kirby-cms-path": false
   }

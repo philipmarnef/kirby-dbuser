@@ -8,12 +8,14 @@ return [
 	'description' => 'Nice command',
 	'args' => [],
 	'command' => static function ($cli): void {
-		for ($i=0; $i < 2001; $i++) { 
-			kirby()->impersonate('kirby');
+		kirby()->impersonate('kirby');
+		$password = User::hashPassword('12345678');
+
+		for ($i=7006; $i < 10001; $i++) { 
 			kirby()->users()->create([
 				'id'        => Str::random(8),
 				'email'     => 'user' . $i . '@example.com',
-				'password'  => User::hashPassword('12345678'),
+				'password'  => $password,
 				'role'      => 'subscriber',
 				'language'  => 'en',
 			]);
