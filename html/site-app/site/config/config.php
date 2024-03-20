@@ -18,5 +18,8 @@ return [
 		'user.changePassword:before' => fn(User $user, string $password) => CustomApp::db_user_update($user->id(), ['password' => User::hashPassword($password)]),
 		'user.changeRole:before' => fn(User $user, string $role) => CustomApp::db_user_update($user->id(), ['role' => $role]),
 		'user.changeLanguage:before' => fn(User $user, string $language) => CustomApp::db_user_update($user->id(), ['language' => $language]),
+
+		'user.login:after' => fn(User $user) => kirby()->session()->set('user_logged_in', $user->id()),
+		'user.logout:after' => fn() => kirby()->session()->remove('user_logged_in'),
 	]
 ];

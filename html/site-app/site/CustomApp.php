@@ -15,7 +15,27 @@ class CustomApp extends App
             return $this->users;
         }
 
-        $users = Db::table('users')->fetch('array')->iterator('array')->all();
+        $users = [];
+        if ($user_id = $this->session()->get('user_logged_in')) {
+            $users = Db::table('users')
+                ->where('role', 'is not', 'subscriber')
+                ->orWhere(['id' => $user_id])
+                ->fetch('array')->iterator('array')
+                ->all();
+        } else if (
+            str_starts_with($this->path(), 'panel')
+            || str_starts_with($this->path(), 'api/auth')
+        ) {
+            $users = Db::table('users')
+                ->fetch('array')->iterator('array')
+                ->all();
+        } else {
+            $users = Db::table('users')
+                ->where('role', 'is not', 'subscriber')
+                ->fetch('array')->iterator('array')
+                ->all();
+        }
+        
         return $this->users = Users::factory($users);
     }
 

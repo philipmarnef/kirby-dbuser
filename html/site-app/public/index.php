@@ -2,8 +2,6 @@
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-ray()->measure();
-
 echo (new CustomApp([
 	'roots' => [
 		'index'			=> __DIR__,
@@ -17,5 +15,3 @@ echo (new CustomApp([
 		'logs'			=> $storage . '/log',
 	],
 ]))->render();
-
-ray()->measure();

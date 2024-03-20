@@ -35,15 +35,9 @@ return [
 			],
 		]);
 
-		ray()->measure();
-
 		$password = User::hashPassword('12345678');
 		$users_flat = [];
-		for ($i=0; $i < 10001; $i++) { 
-			if ($i % 1000 === 0) {
-				ray()->measure();
-			}
-
+		for ($i=0; $i < 1200; $i++) { 
 			$users_flat[] = Str::random(8);
 			$users_flat[] = 'user' . $i . '@example.com';
 			$users_flat[] = $password;
@@ -51,14 +45,17 @@ return [
 			$users_flat[] = 'en';
 		}
 
-		$questions = A::join(array_fill(0, 10001, '(?, ?, ?, ?, ?)'), ', ');
+		$questions = A::join(array_fill(0, 1200, '(?, ?, ?, ?, ?)'), ', ');
 		$sql = 'INSERT INTO users (id, email, password, role, language) VALUES '.$questions;
 		Db::$connection->execute($sql, $users_flat);
 
-		ray(Db::lastError());
-
-		ray()->measure();
-
+		Db::insert('users', [
+			'id'        => Str::random(8),
+			'email'     => 'iam@adamkiss.com',
+			'password'  => User::hashPassword('asdasdasd'),
+			'role'      => 'admin',
+			'language'  => 'en',
+		]);
 
 		$cli->success('Database setup complete!');
 	}

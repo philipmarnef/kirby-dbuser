@@ -13,6 +13,12 @@
 
 	<main>
 		Kirby has: <?= kirby()->users()->count() ?> users.
+		<?php if($kirby->user()): ?>
+			<?= $kirby->user()->email() ?>
+			<a href="/panel/logout">Logout</a>
+		<?php else: ?>
+			<a href="/panel/login">Login</a>
+		<?php endif; ?>
 	</main>
 
 </body>
