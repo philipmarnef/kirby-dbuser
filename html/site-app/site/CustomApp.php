@@ -21,7 +21,6 @@ class CustomApp extends App
             Str::startsWith($this->path(), 'panel')
             || Str::startsWith($this->path(), 'api/auth')
         ) {
-            ray('loading all users');
             $users = Db::table('users')
                 ->fetch('array')->iterator('array')
                 ->all();
