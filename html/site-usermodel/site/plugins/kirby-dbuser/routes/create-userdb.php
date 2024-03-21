@@ -22,36 +22,40 @@ return [
 		}
 
 		if ($database) {
+
 			// create new Database object
 			// replace `path_to_file` with the absolute path to the file on your computer!
 			$db = new Database([
 					'type'     => 'sqlite',
 					'database' => $dbname,
 			]);
-			// add users table with id, email, name, role, language and password fields
-			// all fields use type text
-			$db->createTable('users', [
-					'id'       => [
-							'type'   => 'text',
-							'unique' => true,
-							'key'    => 'primary'
-					],
-					'email'    => [
-							'type' => 'text',
-					],
-					'name'     =>  [
-							'type' => 'text',
-					],
-					'role'     =>  [
-							'type' => 'text',
-					],
-					'language' =>  [
-							'type' => 'text',
-					],
-					'secrets' =>  [
-							'type' => 'text',
-					],
-			]);
+			$pdo = $db->connection();
+
+			// add users table with 
+			// userdata: id, email, name, role, language and password
+			// secrets and content data stored as JSON
+			$sql = <<<SQL
+				CREATE TABLE IF NOT EXISTS users (
+					id STRING PRIMARY KEY,
+					email TEXT,
+					name TEXT,
+					role TEXT,
+					language TEXT,
+					content JSON,
+					secrets JSON,
+					created_at TIMESTAMP DEFAULT (unixepoch()) NOT NULL,
+					updated_at TIMESTAMP DEFAULT (unixepoch()) NOT NULL
+				);
+			SQL;
+
+			try {
+				$pdo->beginTransaction();
+				$pdo->exec($sql);
+				$pdo->commit();
+			} catch (Exception $e) {
+				echo $e->getMessage();
+			}
+
 			// set the users table as the one we want to query
 			$query = $db->table('users');
 			// three users show be enough for a start
