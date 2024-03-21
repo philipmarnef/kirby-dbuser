@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\User;
+use Kirby\Content\Content;
 use Kirby\Data\Json;
 use Kirby\Database\Db;
 
@@ -28,17 +29,6 @@ class SubscriberUser extends User
 
 		// ToDo ( see UserActions->delete() )
 		return false;
-	}
-
-	/**
-	 * Read the content from the database
-	 */
-	public function readContent(string $languageCode = null): array
-	{
-
-		// ToDo ( see ModelWithContent->readContent() )
-		return [];
-
 	}
 
 	/**
@@ -77,17 +67,58 @@ class SubscriberUser extends User
 	}
 
 	/**
-	 * Low level data writer method
-	 * to store the given data on disk or anywhere else
-	 * @internal
+	 * Updates the user data
 	 */
-	public function writeContent(array $data, string $languageCode = null): bool
-	{
+	public function update(
+		array $input = null,
+		string $languageCode = null,
+		bool $validate = false
+	): static {
 
-		// ToDo ( see ModelWithContent->writeContent() )
+		// in multi-lang, …
+		if ($this->kirby()->multilang() === true) {
+			// look up the actual language object if possible
+			$language = $this->kirby()->language($languageCode);
 
-		return true;
+			// validate the language code
+			if ($language === null) {
+				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+			}
+
+			$lang = $language->code();
+		} else {
+			// otherwise use hardcoded "default" code for single lang
+			$lang = 'default';
+		}
+
+		if ( $lang !== 'default' )  $data = [ $lang => $input ];
+
+		$row = Db::first('users', 'content', [ 'id' => $this->id() ] )->toArray();
+		$oldContent = Json::decode($row['content']);
+		$newContent = array_merge_recursive($oldContent, $input );
+
+		$this->content = new Content($newContent);
+
+		try {
+			Db::update('users', [ 
+				'content' => Json::encode($newContent), 
+				'updated_at' => time()
+			], [ 'id' => $this->id() ] );
+		} catch (Exception $e) {
+
+		}
+
+		// set auth user data only if the current user is this user
+		if ($this->isLoggedIn() === true) {
+			$this->kirby()->auth()->setUser($this);
+		}
+
+		// update the users collection
+		$this->kirby()->users()->set($this->id(), $this);
+
+		return $this;
 	}
+
 
 	/**
 	 * Writes the account information to the database
