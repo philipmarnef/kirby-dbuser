@@ -1,0 +1,12 @@
+title: Image
+accept:
+  mime: image/jpeg, image/png, image/gif
+# maximum 25Mb
+  maxsize: 26214400
+create:
+  width: 3000
+
+fields:
+  alt:
+    label: Alt text
+    type: text

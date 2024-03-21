@@ -1,0 +1,15 @@
+title: Subscriber
+permissions:
+  access:
+    panel: false
+home: /
+
+fields:
+  f1:
+    type: text
+    label: Field 1
+    width: 1/2
+  f2:
+    type: text
+    label: Field 2
+    width: 1/2

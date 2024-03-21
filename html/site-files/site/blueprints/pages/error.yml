@@ -1,0 +1,19 @@
+title: Error Page
+
+tabs:
+# tab
+  fields:
+    label: Fields
+    icon: text
+    columns:
+    # column
+      main:
+        width: 1/1
+        sections:
+        # section
+          fields:
+            type: fields
+            fields:
+              text:
+                label: Text
+                type: textarea
